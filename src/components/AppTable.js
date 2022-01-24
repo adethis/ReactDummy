@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Input, Modal, Space, Table, Form } from 'antd';
+import axios from 'axios';
 
 const newData = {
   id: null,
@@ -30,13 +31,19 @@ const AppTable = ({ dataApi }) => {
   // Form Edit
   const onEditForm = (record) => {
     setVisible(true);
-    // setEditingForm({ ...record });
-    setEditingForm(...record);
+    setEditingForm(record);
+    form.setFieldsValue(record);
   };
 
   // onFinish
   const onFinish = (values) => {
     console.log('ini adalah values', values);
+    editingForm.Datetime = values.Datetime;
+    axios.put('http://demokitiot.ddns.net:9191/downtimes/chopp', editingForm)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => console.log(err));
     setVisible(false);
   };
 
@@ -131,15 +138,12 @@ const AppTable = ({ dataApi }) => {
             }}>
             <Form
               form={form}
-              // onFinish={onFinish}
-              onFinishFailed=''
-              onFieldsChange={onFinish}
+              onFinish={onFinish}
               layout='vertical'>
               <Form.Item
                 name='Datetime'
-                label='Datetime:'
-                initialValue={editingForm?.Datetime}>
-                <Input onChange={onHandleChange} />
+                label='Datetime:'>
+                <Input />
               </Form.Item>
             </Form>
           </Modal>
@@ -153,6 +157,7 @@ const AppTable = ({ dataApi }) => {
   // Rendering
   return (
     <Table
+      rowKey="id"
       columns={columns}
       dataSource={data}
       pagination={{
