@@ -1,6 +1,21 @@
 import React, { useState } from 'react';
 import { Button, Input, Modal, Space, Table, Form } from 'antd';
 
+const newData = {
+  id: null,
+  dtForm: null,
+
+  // title: "",
+  // description: "",
+  // duration: "",
+  // year: "",
+  // genre: "",
+  // rating: "",
+  // review: "",
+  // image_url: "",
+  // statusForm: "",
+};
+
 const AppTable = ({ dataApi }) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
@@ -15,8 +30,26 @@ const AppTable = ({ dataApi }) => {
   // Form Edit
   const onEditForm = (record) => {
     setVisible(true);
-    setEditingForm({ ...record });
-    console.log(editingForm);
+    // setEditingForm({ ...record });
+    setEditingForm(...record);
+  };
+
+  // onFinish
+  const onFinish = (values) => {
+    console.log('ini adalah values', values);
+    setVisible(false);
+  };
+
+  // onCancel
+  const onCancel = () => {
+    setVisible(false);
+  };
+  const onFieldChange = (values) => {
+    console.log('ini OnfieldChange', values);
+  };
+
+  const onHandleChange = (e) => {
+    console.log(e.target.value);
   };
 
   // Columns
@@ -82,23 +115,31 @@ const AppTable = ({ dataApi }) => {
             Edit
           </Button>
           <Modal
-            title='Edit Form'
-            // dataForm={dataForm}
             visible={visible}
-            // onCreate={onCreate}
-            onCancel={() => {
-              setVisible(false);
+            title='Edit Form'
+            onCancel={onCancel}
+            onOk={() => {
+              form
+                .validateFields()
+                .then((values) => {
+                  form.resetFields();
+                  onFinish(values);
+                })
+                .catch((info) => {
+                  console.log('Validate Failed:', info);
+                });
             }}>
-            <Form form={form} onFinish='' onFinishFailed='' layout='vertical'>
-              <Form.Item name='Datetime' label='Datetime:'>
-                <Input
-                  value={editingForm?.Datetime}
-                  // onChange={(e) => {
-                  //   setEditingForm((pre) => {
-                  //     return { ...pre, Datetime: e.target.value };
-                  //   });
-                  // }}
-                />
+            <Form
+              form={form}
+              // onFinish={onFinish}
+              onFinishFailed=''
+              onFieldsChange={onFinish}
+              layout='vertical'>
+              <Form.Item
+                name='Datetime'
+                label='Datetime:'
+                initialValue={editingForm?.Datetime}>
+                <Input onChange={onHandleChange} />
               </Form.Item>
             </Form>
           </Modal>
@@ -109,6 +150,7 @@ const AppTable = ({ dataApi }) => {
 
   const data = dataApi;
 
+  // Rendering
   return (
     <Table
       columns={columns}
@@ -117,6 +159,7 @@ const AppTable = ({ dataApi }) => {
         current: page,
         onChange: handleChange,
         pageSize: 10,
+
         // total: data.length,
         showSizeChanger: false,
       }}
