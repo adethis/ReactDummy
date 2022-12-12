@@ -18,11 +18,11 @@ const AppContent = () => {
   // GET ALL DATA API
   const getAllData = async () => {
     const fullAPIs = [
-      'http://192.168.18.23:5000/downtimes',
-      'http://192.168.18.23:5000/downtimes/chopp',
-      'http://192.168.18.23:5000/downtimes/pasta',
-      'http://192.168.18.23:5000/downtimes/almond',
-      'http://192.168.18.23:5000/downtimes/rmp',
+      'http://demokitiot.ddns.net:9191/downtimes',
+      'http://demokitiot.ddns.net:9191/downtimes/chopp',
+      'http://demokitiot.ddns.net:9191/downtimes/pasta',
+      'http://demokitiot.ddns.net:9191/downtimes/almond',
+      'http://demokitiot.ddns.net:9191/downtimes/rmp',
     ];
 
     axios.all(fullAPIs.map((fullAPI) => axios.get(fullAPI))).then(
